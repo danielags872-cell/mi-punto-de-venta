@@ -3,33 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Pro: Inventario y Cierres</title>
+    <title>Control Pro: Inventario, Ventas y Ganancias</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-4 md:p-8">
 
-    <div class="max-w-5xl mx-auto space-y-6">
-        <h1 class="text-3xl font-bold text-slate-800 text-center mb-8">Gestión de Negocio</h1>
+    <div class="max-w-6xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-slate-800 text-center mb-8">Gestión de Negocio y Utilidades</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Registrar Producto</h2>
                 <div class="space-y-3">
-                    <input id="prodNombre" type="text" placeholder="Nombre" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
-                    <input id="prodPrecio" type="number" placeholder="Precio ($)" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
-                    <input id="prodStock" type="number" placeholder="Stock Inicial" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
-                    <button onclick="agregarProducto()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Guardar en Inventario</button>
+                    <input id="prodNombre" type="text" placeholder="Nombre del producto" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-sm">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="prodCosto" type="number" placeholder="Costo ($)" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-sm">
+                        <input id="prodPrecio" type="number" placeholder="Venta ($)" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-sm">
+                    </div>
+                    <input id="prodStock" type="number" placeholder="Stock Inicial" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-sm">
+                    <button onclick="agregarProducto()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Guardar Producto</button>
                 </div>
             </div>
 
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Existencias</h2>
+                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2 text-sm uppercase">Inventario y Margen</h2>
                 <div class="overflow-y-auto max-h-64">
-                    <table class="w-full text-sm">
-                        <thead class="sticky top-0 bg-white">
+                    <table class="w-full text-xs md:text-sm">
+                        <thead class="sticky top-0 bg-white shadow-sm">
                             <tr class="text-slate-500 border-b">
                                 <th class="p-2 text-left">Producto</th>
-                                <th class="p-2 text-left">Precio</th>
+                                <th class="p-2 text-left">Venta</th>
+                                <th class="p-2 text-left">Ganancia/u</th>
                                 <th class="p-2 text-left">Stock</th>
                                 <th class="p-2 text-right">Vender</th>
                             </tr>
@@ -40,172 +44,152 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-200 shadow-sm">
-                <h2 class="font-bold text-emerald-800 mb-4 flex justify-between">
-                    Caja de Hoy <span id="infoFecha" class="text-sm font-normal opacity-70"></span>
-                </h2>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-white p-3 rounded-lg border border-emerald-100">
-                        <p class="text-xs text-slate-500 uppercase">Efectivo</p>
-                        <p id="cajaEfectivo" class="text-xl font-bold text-emerald-600">$0</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h2 class="font-bold text-slate-700 mb-3 text-sm uppercase">Caja de Hoy</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between"><span>Efectivo:</span> <span id="cajaEfectivo" class="font-bold text-emerald-600">$0</span></div>
+                    <div class="flex justify-between"><span>Transf:</span> <span id="cajaTransfer" class="font-bold text-blue-600">$0</span></div>
+                    <div class="pt-2 border-t flex justify-between text-lg font-black text-slate-800">
+                        <span>Total:</span> <span id="totalCaja">$0</span>
                     </div>
-                    <div class="bg-white p-3 rounded-lg border border-emerald-100">
-                        <p class="text-xs text-slate-500 uppercase">Transf.</p>
-                        <p id="cajaTransfer" class="text-xl font-bold text-blue-600">$0</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-emerald-200 pt-4">
-                    <div>
-                        <p class="text-xs text-slate-500 uppercase font-semibold">Ventas del Mes</p>
-                        <p id="totalMes" class="text-2xl font-black text-slate-800">$0</p>
-                    </div>
-                    <button onclick="limpiarCajaManual()" class="text-xs bg-emerald-200 text-emerald-700 px-3 py-1 rounded-md hover:bg-emerald-300">Cerrar Caja Manual</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Historial de Cierres Diarios</h2>
-                <div class="overflow-y-auto max-h-48 text-sm">
-                    <ul id="listaHistorial" class="divide-y divide-slate-100">
-                        </ul>
+            <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200 shadow-sm">
+                <h2 class="font-bold text-indigo-800 mb-3 text-sm uppercase">Utilidad Neta (Hoy)</h2>
+                <p class="text-xs text-indigo-600 mb-2 italic">Lo que realmente ganaste tras descontar costos:</p>
+                <p id="gananciaHoy" class="text-3xl font-black text-indigo-700">$0</p>
+                <div class="mt-4 pt-2 border-t border-indigo-100 flex justify-between items-center text-xs text-indigo-800">
+                    <span>Acumulado Mes:</span>
+                    <span id="totalMes" class="font-bold">$0</span>
                 </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 mb-3 text-sm uppercase">Cierres Pasados</h2>
+                <div class="overflow-y-auto max-h-32">
+                    <ul id="listaHistorial" class="divide-y divide-slate-100 text-[11px]"></ul>
+                </div>
+                <button onclick="limpiarCajaManual()" class="w-full mt-3 bg-red-50 text-red-600 py-1 rounded text-xs hover:bg-red-100">Cerrar Caja Ahora</button>
             </div>
         </div>
     </div>
 
     <script>
         let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-        let ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || { efectivo: 0, transfer: 0, fecha: "" };
+        let ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || { efectivo: 0, transfer: 0, ganancia: 0, fecha: "" };
         let historial = JSON.parse(localStorage.getItem('historialCierres')) || [];
 
         function verificarCambioDeDia() {
             const hoy = new Date().toLocaleDateString();
             if (ventas.fecha !== "" && ventas.fecha !== hoy) {
-                cerrarCajaAutomatico();
+                cerrarCaja();
             }
             ventas.fecha = hoy;
-            guardarDatos();
+            renderizar();
         }
 
-        function cerrarCajaAutomatico() {
-            // Guardar el día que termina en el historial
+        function cerrarCaja() {
             const totalDia = ventas.efectivo + ventas.transfer;
-            if(totalDia > 0) {
+            if(totalDia > 0 || ventas.ganancia > 0) {
                 historial.unshift({
                     fecha: ventas.fecha,
-                    efectivo: ventas.efectivo,
-                    transfer: ventas.transfer,
-                    total: totalDia
+                    total: totalDia,
+                    ganancia: ventas.ganancia
                 });
-                // Mantener solo los últimos 30 cierres para no saturar
-                if(historial.length > 30) historial.pop();
+                if(historial.length > 31) historial.pop();
+                localStorage.setItem('historialCierres', JSON.stringify(historial));
             }
-            
             ventas.efectivo = 0;
             ventas.transfer = 0;
-            localStorage.setItem('historialCierres', JSON.stringify(historial));
+            ventas.ganancia = 0;
         }
 
         function agregarProducto() {
             const nombre = document.getElementById('prodNombre').value;
+            const costo = parseFloat(document.getElementById('prodCosto').value);
             const precio = parseFloat(document.getElementById('prodPrecio').value);
             const stock = parseInt(document.getElementById('prodStock').value);
 
-            if(nombre && precio >= 0 && stock >= 0) {
-                inventario.push({ nombre, precio, stock });
-                guardarDatos();
-                document.getElementById('prodNombre').value = '';
-                document.getElementById('prodPrecio').value = '';
-                document.getElementById('prodStock').value = '';
+            if(nombre && !isNaN(costo) && !isNaN(precio)) {
+                inventario.push({ nombre, costo, precio, stock });
+                guardarYRender();
+                // Limpiar campos
+                ['prodNombre', 'prodCosto', 'prodPrecio', 'prodStock'].forEach(id => document.getElementById(id).value = '');
             }
         }
 
         function vender(index, metodo) {
             if(inventario[index].stock > 0) {
-                inventario[index].stock--;
-                if(metodo === 'efectivo') ventas.efectivo += inventario[index].precio;
-                else ventas.transfer += inventario[index].precio;
-                guardarDatos();
+                const prod = inventario[index];
+                prod.stock--;
+                
+                if(metodo === 'efectivo') ventas.efectivo += prod.precio;
+                else ventas.transfer += prod.precio;
+
+                // Cálculo de ganancia: Precio Venta - Costo
+                const gananciaUnidad = prod.precio - prod.costo;
+                ventas.ganancia += gananciaUnidad;
+
+                guardarYRender();
             } else {
                 alert("Sin existencias");
             }
         }
 
-        function calcularVentasMes() {
-            const hoy = new Date();
-            const mesActual = hoy.getMonth();
-            const anioActual = hoy.getFullYear();
-
-            // Sumar del historial los que pertenecen al mes actual
-            let sumaHistorial = historial.reduce((acc, cierre) => {
-                const [d, m, a] = cierre.fecha.split('/'); // Asumiendo formato DD/MM/AAAA
-                // Nota: Depende del formato local, ajustamos a Date si es necesario
-                const fechaCierre = cierre.fecha; 
-                // Para simplificar, sumamos todo lo que hay en el historial este mes
-                return acc + cierre.total;
-            }, 0);
-
-            return sumaHistorial + (ventas.efectivo + ventas.transfer);
-        }
-
         function renderizar() {
-            // 1. Render Inventario
             const tabla = document.getElementById('tablaInventario');
             tabla.innerHTML = '';
             inventario.forEach((prod, index) => {
+                const gananciaU = prod.precio - prod.costo;
                 tabla.innerHTML += `
-                    <tr class="border-b border-slate-50">
+                    <tr class="border-b border-slate-50 hover:bg-slate-50">
                         <td class="p-2 font-medium">${prod.nombre}</td>
-                        <td class="p-2 text-slate-600">$${prod.precio.toLocaleString()}</td>
-                        <td class="p-2 font-bold ${prod.stock < 5 ? 'text-red-500' : 'text-slate-700'}">${prod.stock}</td>
+                        <td class="p-2">$${prod.precio.toLocaleString()}</td>
+                        <td class="p-2 text-indigo-600 font-semibold">$${gananciaU.toLocaleString()}</td>
+                        <td class="p-2 font-bold ${prod.stock < 5 ? 'text-red-500' : 'text-slate-600'}">${prod.stock}</td>
                         <td class="p-2 text-right space-x-1">
-                            <button onclick="vender(${index}, 'efectivo')" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px] hover:bg-emerald-600">EFE</button>
-                            <button onclick="vender(${index}, 'transfer')" class="bg-blue-500 text-white px-2 py-1 rounded text-[10px] hover:bg-blue-600">TRA</button>
+                            <button onclick="vender(${index}, 'efectivo')" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px]">💵</button>
+                            <button onclick="vender(${index}, 'transfer')" class="bg-blue-500 text-white px-2 py-1 rounded text-[10px]">📱</button>
                         </td>
                     </tr>
                 `;
             });
 
-            // 2. Render Caja
-            const totalDia = ventas.efectivo + ventas.transfer;
             document.getElementById('cajaEfectivo').innerText = `$${ventas.efectivo.toLocaleString()}`;
             document.getElementById('cajaTransfer').innerText = `$${ventas.transfer.toLocaleString()}`;
-            document.getElementById('infoFecha').innerText = ventas.fecha;
-            document.getElementById('totalMes').innerText = `$${calcularVentasMes().toLocaleString()}`;
+            document.getElementById('totalCaja').innerText = `$${(ventas.efectivo + ventas.transfer).toLocaleString()}`;
+            document.getElementById('gananciaHoy').innerText = `$${ventas.ganancia.toLocaleString()}`;
 
-            // 3. Render Historial
+            // Acumulado del mes (ventas brutas)
+            const ventasMes = historial.reduce((acc, c) => acc + c.total, 0) + (ventas.efectivo + ventas.transfer);
+            document.getElementById('totalMes').innerText = `$${ventasMes.toLocaleString()}`;
+
             const lista = document.getElementById('listaHistorial');
-            lista.innerHTML = historial.length === 0 ? '<p class="text-slate-400 italic">No hay cierres previos.</p>' : '';
-            historial.forEach(c => {
-                lista.innerHTML += `
-                    <li class="py-2 flex justify-between items-center">
-                        <span class="font-semibold text-slate-600">${c.fecha}</span>
-                        <div class="text-right text-xs">
-                            <p class="font-bold text-slate-800">$${c.total.toLocaleString()}</p>
-                            <p class="text-slate-400">Ef: $${c.efectivo.toLocaleString()} | Tr: $${c.transfer.toLocaleString()}</p>
-                        </div>
-                    </li>
-                `;
-            });
+            lista.innerHTML = historial.map(c => `
+                <li class="py-1 flex justify-between">
+                    <span>${c.fecha}</span>
+                    <span class="font-bold text-slate-700">$${c.total.toLocaleString()} (Utilidad: $${c.ganancia.toLocaleString()})</span>
+                </li>
+            `).join('');
         }
 
-        function guardarDatos() {
+        function guardarYRender() {
             localStorage.setItem('inventario', JSON.stringify(inventario));
             localStorage.setItem('ventasDiarias', JSON.stringify(ventas));
             renderizar();
         }
 
         function limpiarCajaManual() {
-            if(confirm("¿Deseas cerrar la caja de hoy? Se guardará en el historial y el contador diario volverá a $0.")) {
-                cerrarCajaAutomatico();
+            if(confirm("Cerrar caja guardará los datos en el historial y reiniciará el contador diario.")) {
+                cerrarCaja();
                 ventas.fecha = new Date().toLocaleDateString();
-                guardarDatos();
+                guardarYRender();
             }
         }
 
         verificarCambioDeDia();
-        renderizar();
     </script>
 </body>
 </html>
