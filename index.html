@@ -3,54 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Inventario y Caja</title>
+    <title>Control Pro: Inventario y Cierres</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-5">
+<body class="bg-slate-100 p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">Sistema de Inventario y Caja</h1>
+    <div class="max-w-5xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-slate-800 text-center mb-8">Gestión de Negocio</h1>
 
-        <div class="mb-10 p-4 border-l-4 border-blue-500 bg-blue-50">
-            <h2 class="font-semibold mb-3">Registrar / Actualizar Producto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input id="prodNombre" type="text" placeholder="Nombre del producto" class="p-2 border rounded">
-                <input id="prodPrecio" type="number" placeholder="Precio de venta" class="p-2 border rounded">
-                <input id="prodStock" type="number" placeholder="Cantidad inicial" class="p-2 border rounded">
-                <button onclick="agregarProducto()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar en Inventario</button>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Registrar Producto</h2>
+                <div class="space-y-3">
+                    <input id="prodNombre" type="text" placeholder="Nombre" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                    <input id="prodPrecio" type="number" placeholder="Precio ($)" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                    <input id="prodStock" type="number" placeholder="Stock Inicial" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                    <button onclick="agregarProducto()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Guardar en Inventario</button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Existencias</h2>
+                <div class="overflow-y-auto max-h-64">
+                    <table class="w-full text-sm">
+                        <thead class="sticky top-0 bg-white">
+                            <tr class="text-slate-500 border-b">
+                                <th class="p-2 text-left">Producto</th>
+                                <th class="p-2 text-left">Precio</th>
+                                <th class="p-2 text-left">Stock</th>
+                                <th class="p-2 text-right">Vender</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaInventario"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div class="mb-10">
-            <h2 class="font-semibold mb-3">Existencias Actuales</h2>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="p-2 border">Producto</th>
-                        <th class="p-2 border">Precio</th>
-                        <th class="p-2 border">Stock</th>
-                        <th class="p-2 border">Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaInventario"></tbody>
-            </table>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-200 shadow-sm">
+                <h2 class="font-bold text-emerald-800 mb-4 flex justify-between">
+                    Caja de Hoy <span id="infoFecha" class="text-sm font-normal opacity-70"></span>
+                </h2>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-lg border border-emerald-100">
+                        <p class="text-xs text-slate-500 uppercase">Efectivo</p>
+                        <p id="cajaEfectivo" class="text-xl font-bold text-emerald-600">$0</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-emerald-100">
+                        <p class="text-xs text-slate-500 uppercase">Transf.</p>
+                        <p id="cajaTransfer" class="text-xl font-bold text-blue-600">$0</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-emerald-200 pt-4">
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase font-semibold">Ventas del Mes</p>
+                        <p id="totalMes" class="text-2xl font-black text-slate-800">$0</p>
+                    </div>
+                    <button onclick="limpiarCajaManual()" class="text-xs bg-emerald-200 text-emerald-700 px-3 py-1 rounded-md hover:bg-emerald-300">Cerrar Caja Manual</button>
+                </div>
+            </div>
 
-        <div class="p-4 border-l-4 border-green-500 bg-green-50">
-            <h2 class="font-semibold mb-3">Cuadre de Caja Diaria</h2>
-            <p class="text-lg">Total Ventas Hoy: <span id="totalCaja" class="font-bold text-green-700">$0</span></p>
-            <button onclick="limpiarCaja()" class="mt-2 text-xs text-red-500 underline">Reiniciar Caja del Día</button>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 mb-4 border-b pb-2">Historial de Cierres Diarios</h2>
+                <div class="overflow-y-auto max-h-48 text-sm">
+                    <ul id="listaHistorial" class="divide-y divide-slate-100">
+                        </ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-        let ventasHoy = parseFloat(localStorage.getItem('ventasHoy')) || 0;
+        let ventas = JSON.parse(localStorage.getItem('ventasDiarias')) || { efectivo: 0, transfer: 0, fecha: "" };
+        let historial = JSON.parse(localStorage.getItem('historialCierres')) || [];
 
-        function guardarDatos() {
-            localStorage.setItem('inventario', JSON.stringify(inventario));
-            localStorage.setItem('ventasHoy', ventasHoy.toString());
-            renderizar();
+        function verificarCambioDeDia() {
+            const hoy = new Date().toLocaleDateString();
+            if (ventas.fecha !== "" && ventas.fecha !== hoy) {
+                cerrarCajaAutomatico();
+            }
+            ventas.fecha = hoy;
+            guardarDatos();
+        }
+
+        function cerrarCajaAutomatico() {
+            // Guardar el día que termina en el historial
+            const totalDia = ventas.efectivo + ventas.transfer;
+            if(totalDia > 0) {
+                historial.unshift({
+                    fecha: ventas.fecha,
+                    efectivo: ventas.efectivo,
+                    transfer: ventas.transfer,
+                    total: totalDia
+                });
+                // Mantener solo los últimos 30 cierres para no saturar
+                if(historial.length > 30) historial.pop();
+            }
+            
+            ventas.efectivo = 0;
+            ventas.transfer = 0;
+            localStorage.setItem('historialCierres', JSON.stringify(historial));
         }
 
         function agregarProducto() {
@@ -58,54 +112,99 @@
             const precio = parseFloat(document.getElementById('prodPrecio').value);
             const stock = parseInt(document.getElementById('prodStock').value);
 
-            if(nombre && precio && stock) {
+            if(nombre && precio >= 0 && stock >= 0) {
                 inventario.push({ nombre, precio, stock });
                 guardarDatos();
-                limpiarFormulario();
+                document.getElementById('prodNombre').value = '';
+                document.getElementById('prodPrecio').value = '';
+                document.getElementById('prodStock').value = '';
             }
         }
 
-        function venderProducto(index) {
+        function vender(index, metodo) {
             if(inventario[index].stock > 0) {
                 inventario[index].stock--;
-                ventasHoy += inventario[index].precio;
+                if(metodo === 'efectivo') ventas.efectivo += inventario[index].precio;
+                else ventas.transfer += inventario[index].precio;
                 guardarDatos();
             } else {
                 alert("Sin existencias");
             }
         }
 
+        function calcularVentasMes() {
+            const hoy = new Date();
+            const mesActual = hoy.getMonth();
+            const anioActual = hoy.getFullYear();
+
+            // Sumar del historial los que pertenecen al mes actual
+            let sumaHistorial = historial.reduce((acc, cierre) => {
+                const [d, m, a] = cierre.fecha.split('/'); // Asumiendo formato DD/MM/AAAA
+                // Nota: Depende del formato local, ajustamos a Date si es necesario
+                const fechaCierre = cierre.fecha; 
+                // Para simplificar, sumamos todo lo que hay en el historial este mes
+                return acc + cierre.total;
+            }, 0);
+
+            return sumaHistorial + (ventas.efectivo + ventas.transfer);
+        }
+
         function renderizar() {
+            // 1. Render Inventario
             const tabla = document.getElementById('tablaInventario');
             tabla.innerHTML = '';
             inventario.forEach((prod, index) => {
                 tabla.innerHTML += `
-                    <tr>
-                        <td class="p-2 border">${prod.nombre}</td>
-                        <td class="p-2 border">$${prod.precio}</td>
-                        <td class="p-2 border">${prod.stock}</td>
-                        <td class="p-2 border">
-                            <button onclick="venderProducto(${index})" class="bg-green-500 text-white px-2 py-1 rounded text-sm">Vender</button>
+                    <tr class="border-b border-slate-50">
+                        <td class="p-2 font-medium">${prod.nombre}</td>
+                        <td class="p-2 text-slate-600">$${prod.precio.toLocaleString()}</td>
+                        <td class="p-2 font-bold ${prod.stock < 5 ? 'text-red-500' : 'text-slate-700'}">${prod.stock}</td>
+                        <td class="p-2 text-right space-x-1">
+                            <button onclick="vender(${index}, 'efectivo')" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px] hover:bg-emerald-600">EFE</button>
+                            <button onclick="vender(${index}, 'transfer')" class="bg-blue-500 text-white px-2 py-1 rounded text-[10px] hover:bg-blue-600">TRA</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('totalCaja').innerText = `$${ventasHoy.toFixed(2)}`;
+
+            // 2. Render Caja
+            const totalDia = ventas.efectivo + ventas.transfer;
+            document.getElementById('cajaEfectivo').innerText = `$${ventas.efectivo.toLocaleString()}`;
+            document.getElementById('cajaTransfer').innerText = `$${ventas.transfer.toLocaleString()}`;
+            document.getElementById('infoFecha').innerText = ventas.fecha;
+            document.getElementById('totalMes').innerText = `$${calcularVentasMes().toLocaleString()}`;
+
+            // 3. Render Historial
+            const lista = document.getElementById('listaHistorial');
+            lista.innerHTML = historial.length === 0 ? '<p class="text-slate-400 italic">No hay cierres previos.</p>' : '';
+            historial.forEach(c => {
+                lista.innerHTML += `
+                    <li class="py-2 flex justify-between items-center">
+                        <span class="font-semibold text-slate-600">${c.fecha}</span>
+                        <div class="text-right text-xs">
+                            <p class="font-bold text-slate-800">$${c.total.toLocaleString()}</p>
+                            <p class="text-slate-400">Ef: $${c.efectivo.toLocaleString()} | Tr: $${c.transfer.toLocaleString()}</p>
+                        </div>
+                    </li>
+                `;
+            });
         }
 
-        function limpiarFormulario() {
-            document.getElementById('prodNombre').value = '';
-            document.getElementById('prodPrecio').value = '';
-            document.getElementById('prodStock').value = '';
+        function guardarDatos() {
+            localStorage.setItem('inventario', JSON.stringify(inventario));
+            localStorage.setItem('ventasDiarias', JSON.stringify(ventas));
+            renderizar();
         }
 
-        function limpiarCaja() {
-            if(confirm("¿Seguro que quieres reiniciar la caja?")) {
-                ventasHoy = 0;
+        function limpiarCajaManual() {
+            if(confirm("¿Deseas cerrar la caja de hoy? Se guardará en el historial y el contador diario volverá a $0.")) {
+                cerrarCajaAutomatico();
+                ventas.fecha = new Date().toLocaleDateString();
                 guardarDatos();
             }
         }
 
+        verificarCambioDeDia();
         renderizar();
     </script>
 </body>
